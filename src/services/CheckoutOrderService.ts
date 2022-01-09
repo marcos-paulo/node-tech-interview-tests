@@ -55,8 +55,8 @@ class CheckoutOrderService {
 
     return {
       message:
-        `payment for order ${orderCreated.id} has been successfully approved,` +
-        `você receberá em seu e-mail ${e_mail}, a confirmação deste pedido.` +
+        `payment for order ${orderCreated.id} has been successfully approved, ` +
+        `You will receive in your email ${e_mail}, the confirmation of this order. ` +
         `you will receive your order the next day!`,
       order: orderCreated,
     };
