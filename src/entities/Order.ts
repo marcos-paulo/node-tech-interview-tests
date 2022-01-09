@@ -1,4 +1,4 @@
-import { Expose } from "class-transformer";
+import { Exclude, Expose } from "class-transformer";
 import {
   Column,
   CreateDateColumn,
@@ -15,6 +15,10 @@ class Order {
 
   @Column({ default: false })
   isFinished: boolean;
+
+  @Exclude()
+  @CreateDateColumn()
+  delivery_value?: number;
 
   @CreateDateColumn()
   created_at: Date;

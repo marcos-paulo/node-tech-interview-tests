@@ -16,6 +16,10 @@ class Cart {
   @CreateDateColumn()
   created_at?: Date;
 
+  @Exclude()
+  @CreateDateColumn()
+  delivery_value?: number;
+
   @Expose({ name: "total" })
   sumTotal?() {
     let total = 0;
