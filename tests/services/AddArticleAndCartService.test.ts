@@ -14,5 +14,5 @@ it("[AddArticleAndCartService]", async () => {
   const addToCartService = new AddArticleAndCartService();
   const result = await addToCartService.execute({ articles, carts });
   const output = require("../json/add_output.json");
-  expect(result).toEqual(output);
+  expect(result).toMatchObject(output);
 });
