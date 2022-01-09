@@ -1,13 +1,33 @@
 import { Item } from "./Item";
+import { Exclude, Expose } from "class-transformer";
+import { Entity, OneToMany, PrimaryColumn, CreateDateColumn } from "typeorm";
 
+@Entity("carts")
 class Cart {
-  id: number;
+  @PrimaryColumn()
+  readonly id: number;
+
+  @Exclude()
+  @CreateDateColumn()
+  created_at: Date;
+
+  @Expose({ name: "total" })
+  sumTotal() {
+    let total = 0;
+    this.items.map((item) => {
+      total += item.article.price * item.quantity;
+    });
+    return total;
+  }
+
+  @Exclude()
+  @OneToMany(() => Item, (item) => item.cart)
   items: Item[];
-  total: number;
-  constructor(id: number, items: Item[]) {
-    this.id = id;
-    this.items = items;
-    this.total = 0;
+
+  constructor(id: number) {
+    if (!this.id) {
+      this.id = id;
+    }
   }
 }
 
