@@ -21,8 +21,8 @@ it("[POST] [400 Bad Request] Add Articles And Carts", async () => {
 });
 
 it("[POST] [200 OK] Add Articles And Carts", async () => {
-  const data = require("./json/data.json");
-  const output = require("./json/output.json");
+  const data = require("./json/add_data.json");
+  const output = require("./json/add_output.json");
   await req(server)
     .post("/add_article_and_cart")
     .send(data)
