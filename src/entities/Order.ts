@@ -1,18 +1,21 @@
-import { Item } from "./Item";
-import { Exclude, Expose } from "class-transformer";
+import { Expose } from "class-transformer";
 import {
+  Column,
+  CreateDateColumn,
   Entity,
   OneToMany,
-  CreateDateColumn,
   PrimaryGeneratedColumn,
 } from "typeorm";
+import { Item } from "./Item";
 
-@Entity("carts")
-class Cart {
+@Entity("orders")
+class Order {
   @PrimaryGeneratedColumn()
   readonly id: number;
 
-  @Exclude()
+  @Column({ default: false })
+  isFinished: boolean;
+
   @CreateDateColumn()
   created_at: Date;
 
@@ -25,8 +28,7 @@ class Cart {
     return total;
   }
 
-  @Exclude()
-  @OneToMany(() => Item, (item) => item.cart)
+  @OneToMany(() => Item, (item) => item.order)
   items: Item[];
 
   constructor(id: number) {
@@ -36,4 +38,4 @@ class Cart {
   }
 }
 
-export { Cart };
+export { Order };

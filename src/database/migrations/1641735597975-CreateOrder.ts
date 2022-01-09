@@ -1,15 +1,20 @@
-import { Column, MigrationInterface, QueryRunner, Table } from "typeorm";
+import { MigrationInterface, QueryRunner, Table } from "typeorm";
 
-export class CreateCarts1641516371141 implements MigrationInterface {
+export class CreateOrder1641735597975 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.createTable(
       new Table({
-        name: "carts",
+        name: "orders",
         columns: [
           {
             name: "id",
             type: "integer",
             isPrimary: true,
+          },
+          {
+            name: "isFinished",
+            type: "boolean",
+            default: "false",
           },
           {
             name: "created_at",
@@ -22,6 +27,6 @@ export class CreateCarts1641516371141 implements MigrationInterface {
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
-    await queryRunner.dropTable("carts");
+    await queryRunner.dropTable("orders");
   }
 }

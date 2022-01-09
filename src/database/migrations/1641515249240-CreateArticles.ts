@@ -8,7 +8,7 @@ export class CreateArticles1641515249240 implements MigrationInterface {
         columns: [
           {
             name: "id",
-            type: "int",
+            type: "integer",
             isPrimary: true,
           },
           {

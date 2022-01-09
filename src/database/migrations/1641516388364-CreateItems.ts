@@ -16,6 +16,12 @@ export class CreateItems1641516388364 implements MigrationInterface {
           {
             name: "cart_id",
             type: "int",
+            isNullable: true,
+          },
+          {
+            name: "order_id",
+            type: "int",
+            isNullable: true,
           },
           {
             name: "article_id",
@@ -32,7 +38,14 @@ export class CreateItems1641516388364 implements MigrationInterface {
             columnNames: ["cart_id"],
             referencedColumnNames: ["id"],
             referencedTableName: "carts",
-            onDelete: "CASCADE",
+            onDelete: "SET NULL",
+          },
+          {
+            name: "FKOrderItens",
+            columnNames: ["order_id"],
+            referencedColumnNames: ["id"],
+            referencedTableName: "orders",
+            onDelete: "SET NULL",
           },
           {
             name: "FKArticleItens",

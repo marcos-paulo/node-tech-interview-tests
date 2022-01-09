@@ -1,8 +1,8 @@
-import { Entity, PrimaryColumn, Column } from "typeorm";
+import { Entity, Column, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity("articles")
 class Article {
-  @PrimaryColumn()
+  @PrimaryGeneratedColumn()
   readonly id: number;
 
   @Column()
