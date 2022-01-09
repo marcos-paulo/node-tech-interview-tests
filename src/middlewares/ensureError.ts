@@ -7,7 +7,6 @@ export function ensureError(
   next: NextFunction
 ) {
   if (err instanceof Error) {
-    console.error(err.stack);
     return response.status(400).json({
       message: err.message,
     });

@@ -14,15 +14,15 @@ import { Order } from "./Order";
 @Entity("items")
 class Item {
   @PrimaryGeneratedColumn()
-  readonly id: number;
+  readonly id?: number;
 
   @Exclude()
   @Column()
-  cart_id: number;
+  cart_id?: number;
 
   @Exclude()
   @Column()
-  order_id: number;
+  order_id?: number;
 
   @Column()
   article_id: number;
@@ -32,15 +32,15 @@ class Item {
 
   @JoinColumn({ name: "cart_id" })
   @ManyToOne(() => Cart, (cart) => cart.items)
-  cart: Cart;
+  cart?: Cart;
 
   @JoinColumn({ name: "order_id" })
   @ManyToOne(() => Order, (order) => order.items)
-  order: Order;
+  order?: Order;
 
   @JoinColumn({ name: "article_id" })
   @OneToOne(() => Article)
-  article: Article;
+  article?: Article;
 }
 
 export { Item };

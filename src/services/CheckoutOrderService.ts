@@ -26,36 +26,32 @@ class CheckoutOrderService {
     const processDeliveryService = new ProcessDeliveryService();
 
     const [cart] = await cartsRepositories.find({
-      where: {
-        id: cart_id,
-      },
+      where: { id: cart_id },
       relations: ["items"],
     });
 
+    if (!cart) throw new Error("Invalid Cart");
+    if (cart.items.length <= 0) throw new Error("Cart is Empty");
+
     let orderCreated: Order;
-    if (cart) {
-      if (cart.items.length > 0) {
-        orderCreated = await ordersRepositories.save(
-          ordersRepositories.create()
-        );
-        cart.items.map((item) => {
-          item.order_id = orderCreated.id;
-        });
-        await itemsRepositories.save(cart.items);
-      } else {
-        throw new Error("Cart is Empty");
-      }
-    } else {
-      throw new Error("Invalid Cart");
+    orderCreated = await ordersRepositories.save(ordersRepositories.create());
+    cart.items.map((item) => {
+      item.order_id = orderCreated.id;
+    });
+
+    if (!(await processPaymentService.execute(data_payment))) {
+      await ordersRepositories.delete(orderCreated.id);
+      throw new Error("Unable to process payment");
     }
 
-    if (await processPaymentService.execute(data_payment)) {
-      const result = await cartsRepositories.delete(cart_id);
-      if (await processDeliveryService.execute(delivery_data)) {
-        orderCreated.isFinished = true;
-        orderCreated = await ordersRepositories.save(orderCreated);
-      }
-    }
+    await itemsRepositories.save(cart.items);
+    const result = await cartsRepositories.delete(cart_id);
+
+    if (!(await processDeliveryService.execute(delivery_data)))
+      throw new Error("Unable to process delivery");
+
+    orderCreated.isFinished = true;
+    orderCreated = await ordersRepositories.save(orderCreated);
 
     return {
       message:

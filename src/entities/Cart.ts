@@ -14,13 +14,13 @@ class Cart {
 
   @Exclude()
   @CreateDateColumn()
-  created_at: Date;
+  created_at?: Date;
 
   @Expose({ name: "total" })
-  sumTotal() {
+  sumTotal?() {
     let total = 0;
     this.items.map((item) => {
-      total += item.article.price * item.quantity;
+      total += item.article!.price * item.quantity;
     });
     return total;
   }

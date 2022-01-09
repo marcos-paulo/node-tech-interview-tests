@@ -23,7 +23,7 @@ class Order {
   sumTotal() {
     let total = 0;
     this.items.map((item) => {
-      total += item.article.price * item.quantity;
+      total += item.article!.price * item.quantity;
     });
     return total;
   }
