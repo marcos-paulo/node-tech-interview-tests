@@ -12,18 +12,12 @@ class AddArticleAndCartController {
   async handler(request: Request, response: Response) {
     const { articles, carts } = request.body;
 
-    if (articles && carts) {
-      const addArticleAndCartService = new AddArticleAndCartService();
-      const cartsResponse = await addArticleAndCartService.execute({
-        articles,
-        carts,
-      });
-      return response.json(cartsResponse).status(200).end();
-    }
-
-    return response
-      .status(400)
-      .json(require("../json/erros/AddArticlesAndCartsErroDataFormat.json"));
+    const addArticleAndCartService = new AddArticleAndCartService();
+    const cartsResponse = await addArticleAndCartService.execute({
+      articles,
+      carts,
+    });
+    return response.json(cartsResponse).status(200).end();
   }
 }
 
