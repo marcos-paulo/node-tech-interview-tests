@@ -1,11 +1,11 @@
 import { Router } from "express";
 
-import { AddToCartController } from "./controller/AddToCartController";
+import { AddArticleAndCartController } from "./controller/AddArticleAndCartController";
 
-const addToCartController = new AddToCartController();
+const addArticleAndCartController = new AddArticleAndCartController();
 
 const router = Router();
 
-router.post("/addtocart", addToCartController.handler);
+router.post("/add_article_and_cart", addArticleAndCartController.handler);
 
 export { router };
