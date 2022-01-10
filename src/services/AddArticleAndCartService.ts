@@ -7,6 +7,8 @@ import { AddCartService } from "./AddCartService";
 import { AddItemService } from "./AddItemService";
 import { AddArticleService } from "./AddArticleServices";
 import { ApplyDeliveryFee } from "./ApplyDeliveryFee";
+import { ApplyDiscountArticleService } from "./ApplyDiscountArticleService";
+import { CalculaTotalService } from "./CalculateTotal";
 
 interface IAddArticleAndCartRequest {
   articles: Article[];
@@ -20,7 +22,9 @@ class AddArticleAndCartService {
     const addArticleService = new AddArticleService();
     const addItemService = new AddItemService();
     const addCartService = new AddCartService();
+    const applyDiscountArticleService = new ApplyDiscountArticleService();
     const applyDeliveryFee = new ApplyDeliveryFee();
+    const calculateTotalService = new CalculaTotalService();
 
     await addArticleService.execute(articles);
     await addCartService.execute(carts);
@@ -30,8 +34,25 @@ class AddArticleAndCartService {
       order: { id: "ASC" },
       relations: ["items", "items.article"],
     };
-    const savedCarts = await cartsRepositories.find(criteria);
-    await applyDeliveryFee.execute(savedCarts);
+
+    let savedCarts = await cartsRepositories
+      .find(criteria)
+      .then((carts) => {
+        calculateTotalService.execute(carts);
+        return carts;
+      })
+      .then((carts) => {
+        applyDiscountArticleService.execute(carts);
+        return carts;
+      })
+      .then((carts) => {
+        applyDeliveryFee.execute(carts);
+        return carts;
+      })
+      .then((carts) => {
+        calculateTotalService.execute(carts);
+        return carts;
+      });
     await cartsRepositories.save(savedCarts);
 
     return instanceToPlain({ carts: savedCarts });

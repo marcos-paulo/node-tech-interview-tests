@@ -1,11 +1,12 @@
 import { Cart } from "../entities/Cart";
 import deliveryFees from "../json/conf/delivery_fees.json";
+import discounts from "../json/conf/discounts.json";
 
 class ApplyDeliveryFee {
   async execute(carts: Cart[]) {
     const { delivery_fees } = deliveryFees;
     carts.map((cart) => {
-      const sum = cart.sumTotal!();
+      const sum = cart.total! - cart.discount!;
       for (const {
         eligible_transaction_volume: { min_price, max_price },
         price,

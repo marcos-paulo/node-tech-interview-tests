@@ -21,14 +21,20 @@ class Cart {
   @Column()
   delivery_fee?: number;
 
+  @Exclude()
+  @Column()
+  discount?: number;
+
+  @Exclude()
+  @Column()
+  total?: number;
+
   @Expose({ name: "total" })
-  sumTotal?() {
-    let total = 0;
-    this.items.map((item) => {
-      total += item.article!.price * item.quantity;
-    });
-    total += this.delivery_fee!;
-    return total;
+  private sumTotal?() {
+    // console.log(`${this.total!}`);
+    // console.log(`${this.discount!}`);
+    // console.log(`${this.delivery_fee!}`);
+    return this.total! - this.discount! + this.delivery_fee!;
   }
 
   @Exclude()

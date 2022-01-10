@@ -20,17 +20,22 @@ class Order {
   @Column()
   delivery_fee?: number;
 
+  @Exclude()
+  @Column()
+  discount?: number;
+
   @CreateDateColumn()
   created_at: Date;
 
-  @Expose({ name: "total" })
-  sumTotal() {
-    let total = 0;
+  @Column()
+  total?: number;
+
+  sumTotal?() {
+    this.total = 0;
     this.items.map((item) => {
-      total += item.article!.price * item.quantity;
+      this.total! += item.article!.price * item.quantity;
     });
-    total += this.delivery_fee!;
-    return total;
+    this.total! = this.total! + this.delivery_fee! - this.discount!;
   }
 
   @OneToMany(() => Item, (item) => item.order)
