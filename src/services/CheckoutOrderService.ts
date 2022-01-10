@@ -38,13 +38,15 @@ class CheckoutOrderService {
     cart.items.map((item) => {
       item.order_id = orderCreated.id;
     });
+    await itemsRepositories.save(cart.items);
+    orderCreated.delivery_fee = cart.delivery_fee;
+    data_payment.value = orderCreated.delivery_fee;
 
     if (!(await processPaymentService.execute(data_payment))) {
       await ordersRepositories.delete(orderCreated.id);
       throw new Error("Unable to process payment");
     }
 
-    await itemsRepositories.save(cart.items);
     const result = await cartsRepositories.delete(cart_id);
 
     if (!(await processDeliveryService.execute(delivery_data)))
