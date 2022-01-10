@@ -5,6 +5,7 @@ import {
   OneToMany,
   CreateDateColumn,
   PrimaryGeneratedColumn,
+  Column,
 } from "typeorm";
 
 @Entity("carts")
@@ -17,8 +18,8 @@ class Cart {
   created_at?: Date;
 
   @Exclude()
-  @CreateDateColumn()
-  delivery_value?: number;
+  @Column()
+  delivery_fee?: number;
 
   @Expose({ name: "total" })
   sumTotal?() {
@@ -26,6 +27,7 @@ class Cart {
     this.items.map((item) => {
       total += item.article!.price * item.quantity;
     });
+    total += this.delivery_fee!;
     return total;
   }
 

@@ -1,12 +1,12 @@
-import { getCustomRepository } from "typeorm";
-import { ArticlesRepositories } from "../repositories/ArticlesRepositories";
+import { FindManyOptions, getCustomRepository } from "typeorm";
 import { CartsRepositories } from "../repositories/CartsRepositories";
-import { ItemsRepositories } from "../repositories/ItemsRepositories";
 import { Article } from "../entities/Article";
 import { Cart } from "../entities/Cart";
-import { Item } from "../entities/Item";
 import { instanceToPlain } from "class-transformer";
-import dataFormat from "../json/erros/AddArticlesAndCartsErroDataFormat";
+import { AddCartService } from "./AddCartService";
+import { AddItemService } from "./AddItemService";
+import { AddArticleService } from "./AddArticleServices";
+import { ApplyDeliveryFee } from "./ApplyDeliveryFee";
 
 interface IAddArticleAndCartRequest {
   articles: Article[];
@@ -15,45 +15,27 @@ interface IAddArticleAndCartRequest {
 
 class AddArticleAndCartService {
   async execute({ articles, carts }: IAddArticleAndCartRequest) {
-    const articlesRepositories = getCustomRepository(ArticlesRepositories);
     const cartsRepositories = getCustomRepository(CartsRepositories);
-    const itemsRepositories = getCustomRepository(ItemsRepositories);
 
-    if (!articles) throw new Error("Articles - not informed!");
-    if (!carts) throw new Error("Carts - not informed!");
+    const addArticleService = new AddArticleService();
+    const addItemService = new AddItemService();
+    const addCartService = new AddCartService();
+    const applyDeliveryFee = new ApplyDeliveryFee();
 
-    let articlesArray = new Array<Article>();
-    articles.map(({ id, name, price }) => {
-      const newArticle = articlesRepositories.create({ id, name, price });
-      articlesArray.push(newArticle);
-    });
-    await articlesRepositories.save(articlesArray);
+    await addArticleService.execute(articles);
+    await addCartService.execute(carts);
+    await addItemService.execute(carts);
 
-    let cartsArray = new Array<Cart>();
-    let itemsArray = new Array<Item>();
-    carts.map(({ id, items }) => {
-      cartsArray.push(cartsRepositories.create({ id }));
-      items.map(({ article_id, quantity }) => {
-        itemsArray.push(
-          itemsRepositories.create({
-            id: parseInt(`${id}${article_id}`),
-            cart_id: id,
-            article_id,
-            quantity,
-          })
-        );
-      });
-    });
-
-    await cartsRepositories.save(cartsArray);
-    await itemsRepositories.save(itemsArray);
-
-    const savedCarts = await cartsRepositories.find({
+    const criteria: FindManyOptions<Cart> = {
       order: { id: "ASC" },
       relations: ["items", "items.article"],
-    });
+    };
+    const savedCarts = await cartsRepositories.find(criteria);
+    await applyDeliveryFee.execute(savedCarts);
+    await cartsRepositories.save(savedCarts);
 
     return instanceToPlain({ carts: savedCarts });
   }
 }
+
 export { AddArticleAndCartService, IAddArticleAndCartRequest };

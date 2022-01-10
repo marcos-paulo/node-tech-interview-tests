@@ -17,8 +17,8 @@ class Order {
   isFinished: boolean;
 
   @Exclude()
-  @CreateDateColumn()
-  delivery_value?: number;
+  @Column()
+  delivery_fee?: number;
 
   @CreateDateColumn()
   created_at: Date;
@@ -29,6 +29,7 @@ class Order {
     this.items.map((item) => {
       total += item.article!.price * item.quantity;
     });
+    total += this.delivery_fee!;
     return total;
   }
 

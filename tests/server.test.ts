@@ -2,8 +2,8 @@ import req from "supertest";
 import server from "../src/server";
 import connection from "../src/database";
 
-import add_data from "./json/add_data";
-import add_output from "./json/add_output";
+import add_data from "./json/level2/level_2_data.json";
+import add_output from "./json/level2/level_2_output.json";
 
 import order_data from "./json/order_data";
 import order_output from "./json/order_output";

@@ -1,10 +1,7 @@
-import {
-  AddArticleAndCartService,
-  IAddArticleAndCartRequest,
-} from "../../src/services/AddArticleAndCartService";
+import { AddArticleAndCartService } from "../../src/services/AddArticleAndCartService";
 import connection from "../../src/database";
-import add_data from "../json/add_data";
-import add_output from "../json/add_output";
+import add_data from "../json/level2/level_2_data.json";
+import add_output from "../json/level2/level_2_output.json";
 beforeAll(async () => {
   await connection.create();
 });

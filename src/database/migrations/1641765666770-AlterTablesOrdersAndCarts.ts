@@ -7,7 +7,7 @@ export class AlterTablesOrdersAndCarts1641765666770
     await queryRunner.addColumn(
       "carts",
       new TableColumn({
-        name: "delivery_value",
+        name: "delivery_fee",
         type: "double",
         isNullable: true,
       })
@@ -15,7 +15,7 @@ export class AlterTablesOrdersAndCarts1641765666770
     await queryRunner.addColumn(
       "orders",
       new TableColumn({
-        name: "delivery_value",
+        name: "delivery_fee",
         type: "double",
         isNullable: true,
       })
@@ -23,7 +23,7 @@ export class AlterTablesOrdersAndCarts1641765666770
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
-    await queryRunner.dropColumn("carts", "delivery_value");
-    await queryRunner.dropColumn("orders", "delivery_value");
+    await queryRunner.dropColumn("carts", "delivery_fee");
+    await queryRunner.dropColumn("orders", "delivery_fee");
   }
 }
